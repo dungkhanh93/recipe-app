@@ -1,5 +1,6 @@
 // Global app controller
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import { elements, renderLoader, clearLoader } from './views/DOM';
 import * as searchView from './views/searchView';
 
@@ -12,6 +13,10 @@ import * as searchView from './views/searchView';
  */
 const state = {};
 
+
+/**
+ * SEARCH CONTROLLER
+ */
 const controllerSearch = async () => {
   // 1. Get query value from ur
   const query = searchView.getInput();
