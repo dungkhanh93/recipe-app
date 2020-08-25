@@ -38,3 +38,13 @@ elements.searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   controllerSearch();
 });
+
+elements.searchResPages.addEventListener('click', e => {
+  const btn = e.target.closest('.btn-inline');
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.page);
+    searchView.clearResult();
+    searchView.clearResPage();
+    searchView.renderResult(state.search.result, goToPage);
+  }
+})

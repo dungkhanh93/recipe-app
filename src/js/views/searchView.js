@@ -10,6 +10,10 @@ export const clearResult = () => {
   elements.searchResList.innerHTML = '';
 };
 
+export const clearResPage = () => {
+  elements.searchResPages.innerHTML = '';
+}
+
 /*
 Balsamic Strawberry and Chicken Pizza with Sweet Onions and Smoked Bacon
 acc = 0 / acc + cur.length = 8 
@@ -33,7 +37,7 @@ const limitRecipeTitle = (title, limit = 15) => {
 const recipeResult = (recipe) => {
   const markup = `
     <li>
-      <a class="results__link" href="${recipe.recipe_id}">
+      <a class="results__link" href="#${recipe.recipe_id}">
           <figure class="results__fig">
             <img src="${recipe.image_url}" alt="${recipe.title}">
           </figure>
@@ -48,13 +52,42 @@ const recipeResult = (recipe) => {
   elements.searchResList.insertAdjacentHTML('afterbegin', markup);
 };
 
+const createButton = (page, type) => `
+  <button class="btn-inline results__btn--${type}" data-page=${type === 'prev' ? page - 1 : page + 1}>
+  <svg class="search__icon">
+      <use href="img/icons.svg#icon-triangle-${type === 'prev' ? 'left' : 'right'}"></use>
+  </svg>
+  <span>Page ${type === 'prev' ? page - 1 : page + 1}</span>
+  </button>
+`;
+
 const renderButtons = (page, numResult, resPerPage) => {
-  
+  const pages = Math.ceil(numResult / resPerPage);
+
+  let button;
+
+  if (page === 1 && pages > 1) {
+    // Only render next button
+    button = createButton(page, 'next');
+  } else if (page < pages) {
+    // Render both button
+    button = `
+      ${createButton(page, 'prev')}
+      ${createButton(page, 'next')}
+    `;
+  } else if (page === pages && pages > 1) {
+    // Only render prev button
+    button = createButton(page, 'prev');
+  }
+
+  elements.searchResPages.insertAdjacentHTML('afterbegin', button);
 }
 
-export const renderResult = (recipes, page = 1, resPerPage = 5) => {
+export const renderResult = (recipes, page = 1, resPerPage = 10) => {
   const start = (page - 1) * resPerPage;
   const end = page * resPerPage;
 
   recipes.slice(start, end).forEach(recipeResult);
+
+  renderButtons(page, recipes.length, resPerPage);
 };
