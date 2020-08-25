@@ -1,5 +1,6 @@
 // Global app controller
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import { elements, renderLoader, clearLoader } from './views/DOM';
 import * as searchView from './views/searchView';
 
@@ -12,6 +13,10 @@ import * as searchView from './views/searchView';
  */
 const state = {};
 
+
+/**
+ * SEARCH CONTROLLER
+ */
 const controllerSearch = async () => {
   // 1. Get query value from ur
   const query = searchView.getInput();
@@ -38,3 +43,42 @@ elements.searchForm.addEventListener('submit', (e) => {
   e.preventDefault();
   controllerSearch();
 });
+
+elements.searchResPage.addEventListener('click', e => {
+  // console.log(e.target);
+  const btn = e.target.closest('.btn-inline');
+  if (btn) {
+    const goToPage = parseInt(btn.dataset.page);
+    searchView.clearResult();
+    searchView.clearResPage();
+    searchView.renderResult(state.search.result, goToPage);
+  }
+})
+
+
+/**
+ * RECIPE CONTROLLER
+ */
+
+const controllerRecipe = async () => {
+  // 1. Get id from URL
+  const id = window.location.hash.replace('#', '');
+  console.log(id);
+
+  if (id) {
+    // 2. Prepare ui
+
+    // 3. Create new object recipe
+    state.recipe = new Recipe(id);
+
+    // 4. Get recipe
+    await state.recipe.getRecipe();
+    state.recipe.calcTime(); 
+    state.recipe.calcServing();
+
+    // 5. Render to view
+    console.log(state.recipe);
+  }
+}
+
+window.addEventListener('hashchange', controllerRecipe);
