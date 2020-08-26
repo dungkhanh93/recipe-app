@@ -71,6 +71,8 @@ const controllerRecipe = async () => {
     // 3. Create new object recipe
     state.recipe = new Recipe(id);
 
+    window.r = state.recipe;
+
     // 4. Get recipe
     await state.recipe.getRecipe();
     state.recipe.calcTime(); 
@@ -81,4 +83,7 @@ const controllerRecipe = async () => {
   }
 }
 
-window.addEventListener('hashchange', controllerRecipe);
+// window.addEventListener('hashchange', controllerRecipe);
+// window.addEventListener('load', controllerRecipe);
+
+['load', 'hashchange'].forEach(el => window.addEventListener(el, controllerRecipe));
