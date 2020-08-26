@@ -1,8 +1,9 @@
 // Global app controller
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import { elements, renderLoader, clearLoader } from './views/DOM';
+import { elements, renderLoader, clearLoader, scrollToTop } from './views/DOM';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 
 /**
  * Global State
@@ -67,18 +68,27 @@ const controllerRecipe = async () => {
 
   if (id) {
     // 2. Prepare ui
+    scrollToTop();
+    
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
 
     // 3. Create new object recipe
     state.recipe = new Recipe(id);
 
     // 4. Get recipe
     await state.recipe.getRecipe();
+    state.recipe.parseIngredient();
     state.recipe.calcTime(); 
     state.recipe.calcServing();
 
     // 5. Render to view
+    clearLoader();
+    recipeView.renderRecipe(state.recipe);
     console.log(state.recipe);
   }
 }
 
-window.addEventListener('hashchange', controllerRecipe);
+// window.addEventListener('hashchange', controllerRecipe);
+
+['load', 'hashchange'].forEach(el => window.addEventListener(el, controllerRecipe))

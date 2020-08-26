@@ -3,7 +3,8 @@ export const elements = {
   searchForm: document.querySelector('.search'),
   searchResList: document.querySelector('.results__list'),
   searchResult: document.querySelector('.results'),
-  searchResPage: document.querySelector('.results__pages')
+  searchResPage: document.querySelector('.results__pages'),
+  recipe: document.querySelector('.recipe')
 };
 
 export const elementString = {
@@ -24,4 +25,12 @@ export const renderLoader = (parent) => {
 export const clearLoader = () => {
   const loader = document.querySelector(`.${elementString.loader}`);
   if (loader) loader.parentNode.removeChild(loader);
+};
+
+export const scrollToTop = () => {
+  const c = document.documentElement.scrollTop || document.body.scrollTop;
+  if (c > 0) {
+    window.requestAnimationFrame(scrollToTop);
+    window.scrollTo(0, c - c / 8);
+  }
 };
