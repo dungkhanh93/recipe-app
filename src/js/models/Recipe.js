@@ -32,11 +32,48 @@ export default class Recipe {
     const newIngredients = this.ingredients.map(el => {
       // 1. Uniform units
       let ingredient = el.toLowerCase();
-      console.log(ingredient);
+
+      unitsLong.forEach((unit, index) => {
+        ingredient = ingredient.replace(unit, unitsShot[index]);
+      }) 
 
       // 2. Remove parentheses
+      ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
 
       // 3. Parse ingredients to count, unit and ingredient
+      const arrIng = ingredient.split(' ');
+      const unitIndex = arrIng.findIndex(el2 => unitsShot.includes(el2));
+      console.log(arrIng);
+      console.log(unitIndex);
+
+      let objIng;
+
+      if (unitIndex > -1) {
+        // This is a unit
+        let count;
+        if(unitIndex > 1) {
+
+        } else {
+          
+        }
+
+      } else if(parseInt(arrIng[0])) {
+        // Not a unit, but is a number
+        objIng = {
+          count: parseInt(arrIng[0]),
+          unit: '',
+          ingredient: arrIng.splice(1).join(' ')
+        }
+      } else if (unitIndex === -1){
+        // This is No a unit
+        objIng = {
+          count: 1,
+          unit: '',
+          ingredient
+        }
+      }
+
+      return objIng;
     })
 
     this.ingredients = newIngredients;
