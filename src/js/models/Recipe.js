@@ -43,18 +43,22 @@ export default class Recipe {
       // 3. Parse ingredients to count, unit and ingredient
       const arrIng = ingredient.split(' ');
       const unitIndex = arrIng.findIndex(el2 => unitsShot.includes(el2));
-      console.log(arrIng);
-      console.log(unitIndex);
-
+      
       let objIng;
 
       if (unitIndex > -1) {
-        // This is a unit
+        const arrCount = arrIng.slice(0, unitIndex);
         let count;
-        if(unitIndex > 1) {
-
+        if(arrCount.length === 1) {
+          count = eval(arrIng[0].replace('-', '+'));
         } else {
-          
+          count = eval(arrIng.slice(0, unitIndex).join('+'))
+        }
+
+        objIng = {
+          count,
+          unit: arrIng[unitIndex],
+          ingredient: arrIng.splice(unitIndex + 1).join(' ')
         }
 
       } else if(parseInt(arrIng[0])) {

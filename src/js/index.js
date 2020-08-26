@@ -3,6 +3,7 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 import { elements, renderLoader, clearLoader } from './views/DOM';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 
 /**
  * Global State
@@ -28,6 +29,7 @@ const controllerSearch = async () => {
     // 3. Prepare UI for search
     searchView.clearInput();
     searchView.clearResult();
+    searchView.clearResPage();
     renderLoader(elements.searchResult);
 
     // 4. Get results
@@ -67,18 +69,21 @@ const controllerRecipe = async () => {
 
   if (id) {
     // 2. Prepare ui
+    recipeView.clearRecipe();
+    renderLoader(elements.recipe);
 
     // 3. Create new object recipe
     state.recipe = new Recipe(id);
-
-    window.r = state.recipe;
 
     // 4. Get recipe
     await state.recipe.getRecipe();
     state.recipe.calcTime(); 
     state.recipe.calcServing();
+    state.recipe.parseIngredients();
 
     // 5. Render to view
+    clearLoader();
+    recipeView.renderRecipe(state.recipe);
     console.log(state.recipe);
   }
 }
