@@ -51,9 +51,9 @@ export default class Recipe {
         const arrCount = arrIng.slice(0, unitIndex);
         let count;
         if (arrCount.length === 1) {
-          count = Math.round((eval(arrIng[0].replace('-', '+')) + Number.EPSILON) * 100) / 100;
+          count = eval(arrIng[0].replace('-', '+'));
         } else {
-          count = Math.round((eval(arrIng.slice(0, unitIndex).join('+')) + Number.EPSILON) * 100) / 100;
+          count = eval(arrIng.slice(0, unitIndex).join('+'));
         }
 
         objIng = {

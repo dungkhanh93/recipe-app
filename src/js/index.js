@@ -73,6 +73,8 @@ const controllerRecipe = async () => {
     recipeView.clearRecipe();
     renderLoader(elements.recipe);
 
+    if(state.search) searchView.linkActive(id);
+
     // 3. Create new object recipe
     state.recipe = new Recipe(id);
 
