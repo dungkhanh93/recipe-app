@@ -1,7 +1,7 @@
 // Global app controller
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import { elements, renderLoader, clearLoader } from './views/DOM';
+import { elements, renderLoader, clearLoader, scrollToTop } from './views/DOM';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 
@@ -71,6 +71,9 @@ const controllerRecipe = async () => {
     // 2. Prepare ui
     recipeView.clearRecipe();
     renderLoader(elements.recipe);
+    scrollToTop();
+
+    if(state.search) searchView.linkActive(id);
 
     // 3. Create new object recipe
     state.recipe = new Recipe(id);

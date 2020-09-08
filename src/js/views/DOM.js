@@ -26,3 +26,11 @@ export const clearLoader = () => {
   const loader = document.querySelector(`.${elementString.loader}`);
   if (loader) loader.parentNode.removeChild(loader);
 };
+
+export const scrollToTop = () => {
+  const docPos = document.documentElement.scrollTop || document.body.scrollTop;
+  if (docPos > 0) {
+    window.requestAnimationFrame(scrollToTop);
+    window.scrollTo(0, docPos - docPos / 8);
+  }
+};

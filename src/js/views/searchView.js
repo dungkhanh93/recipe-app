@@ -34,6 +34,15 @@ const limitRecipeTitle = (title, limit = 15) => {
   return title;
 };
 
+export const linkActive = id => {
+  const resultArr = Array.from(document.querySelectorAll('.results__link'));
+  console.log(resultArr);
+  resultArr.forEach(el => {
+    el.classList.remove('results__link--active');
+  })
+  document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+}
+
 const recipeResult = (recipe) => {
   const markup = `
     <li>

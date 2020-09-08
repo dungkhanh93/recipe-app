@@ -71,7 +71,7 @@ export default class Recipe {
       } else if (unitIndex === -1){
         // This is No a unit
         objIng = {
-          count: 1,
+          count: '',
           unit: '',
           ingredient
         }
