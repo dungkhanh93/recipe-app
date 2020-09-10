@@ -71,7 +71,7 @@ export default class Recipe {
       } else if (unitIndex === -1){
         // This is No a unit
         objIng = {
-          count: '',
+          count: 1,
           unit: '',
           ingredient
         }
@@ -83,4 +83,15 @@ export default class Recipe {
     this.ingredients = newIngredients;
   }
 
+  updateServing(type) {
+    // Update serving
+    const newServing = type === 'dec' ? this.serving - 1 : this.serving + 1;
+
+    // Update ingredient
+    this.ingredients.forEach(el => {
+      el.count = el.count * (newServing / this.serving); // 1, serving: 5 => 1 * (5/4) = 1.25
+    })
+
+    this.serving = newServing;
+  }
 }
