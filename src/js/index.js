@@ -1,9 +1,11 @@
 // Global app controller
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List';
 import { elements, renderLoader, clearLoader, scrollToTop } from './views/DOM';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as listView from './views/listView';
 
 /**
  * Global State
@@ -91,6 +93,39 @@ const controllerRecipe = async () => {
   }
 }
 
+/**
+ * LIST CONTROLLER
+ */
+
+const controllerList = () => {
+  // Create new item
+  if (!state.list) state.list = new List();
+
+  // Add item for each ingredient
+  state.recipe.ingredients.forEach(el => {
+    const item = state.list.addItem(el.count, el.unit, el.ingredient);
+    listView.renderItem(item);
+  })
+}
+
 // window.addEventListener('hashchange', controllerRecipe);
 
 ['load', 'hashchange'].forEach(el => window.addEventListener(el, controllerRecipe))
+
+
+// Handle recipe buttons click events
+elements.recipe.addEventListener('click', e => {
+  if (e.target.matches('.btn-decrease, .btn-decrease *')) {
+    if (state.recipe.serving > 1) {
+      state.recipe.updateServing('dec')
+      recipeView.updateServingIngredients(state.recipe);
+    }
+  } else if (e.target.matches('.btn-increase, .btn-increase *')) {
+    state.recipe.updateServing('inc')
+    recipeView.updateServingIngredients(state.recipe);
+  } else if (e.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
+    controllerList();
+  }
+})
+
+window.l = new List();
