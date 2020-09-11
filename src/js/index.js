@@ -2,10 +2,12 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Like from './models/Like';
 import { elements, renderLoader, clearLoader, scrollToTop } from './views/DOM';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likeView from './views/likeView';
 
 /**
  * Global State
@@ -16,6 +18,7 @@ import * as listView from './views/listView';
  */
 const state = {};
 
+window.recipeState = state;
 
 /**
  * SEARCH CONTROLLER
@@ -88,7 +91,7 @@ const controllerRecipe = async () => {
 
     // 5. Render to view
     clearLoader();
-    recipeView.renderRecipe(state.recipe);
+    recipeView.renderRecipe(state.recipe, state.like.isLike(id));
     console.log(state.recipe);
   }
 }
@@ -111,6 +114,59 @@ const listController = () => {
   })
 }
 
+// Handle delete and update count list 
+elements.shopping.addEventListener('click', e => {  
+  const id = e.target.closest('.shopping__item').dataset.id;
+  if(e.target.matches('.shopping__delete, .shopping__delete *')) {
+    // Remove item list from data
+    state.list.deleteItem(id);
+
+    // Remove item from ui
+    listView.deleteItem(id);
+  }
+})
+
+/**
+ * LIKE CONTROLLER
+ */
+
+const likeController = () => {
+  // Create new likes
+  const curId = state.recipe.id;
+  if(!state.like) state.like = new Like();
+
+  // Add new like to state data
+  if(!state.like.isLike(curId)) {
+    // Add item to data
+    const item = state.like.addLike(curId, state.recipe.title, state.recipe.publisher, state.recipe.image_url); 
+
+    // Toggle button
+    likeView.toggleButton(state.like.isLike(curId));
+    likeView.toggleLikeMenu(state.like.getNumberLike());
+
+    // Render item to UI
+    likeView.renderItem(item);
+  } else {
+    // Remove item from data
+    state.like.deleteLike(curId);
+
+    // Toggle button
+    likeView.toggleButton(state.like.isLike(curId));
+    likeView.toggleLikeMenu(state.like.getNumberLike());
+
+    // Remove item from UI
+    likeView.deleteItem(curId);
+    console.log(state.like);
+  }
+}
+
+
+// Handle page load event
+window.addEventListener('load', () => {
+  if(!state.like) state.like = new Like();
+  likeView.toggleLikeMenu(state.like.getNumberLike());
+})
+
 // Handle click button recipes
 elements.recipe.addEventListener('click', (e) => {
   if(e.target.matches('.btn-decrease, .btn-decrease *')) {
@@ -124,5 +180,7 @@ elements.recipe.addEventListener('click', (e) => {
     recipeView.updateServingIngredient(state.recipe);
   } else if (e.target.matches('.recipe__btn-add, .recipe__btn-add *')) {
     listController();
+  } else if (e.target.matches('.recipe__love, .recipe__love *')) {
+    likeController();
   }
 })
